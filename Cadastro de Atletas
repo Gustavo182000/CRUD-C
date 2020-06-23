@@ -1,0 +1,310 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <windows.h>
+
+
+typedef struct
+{
+
+    char nome [20];
+    int idade;
+    float altura;
+    int id;
+
+} pessoas;
+pessoas atleta;
+
+FILE *Arquivo,*Copia;
+
+
+void CadastarAtleta()
+{
+
+    Arquivo = fopen("dados.txt","a");
+
+    printf("Digite o id do atleta: ");
+    scanf("%d",&atleta.id);
+    fprintf(Arquivo,"%d ",atleta.id);
+
+    printf("Digite o nome do atleta: ");
+    scanf("%s",&atleta.nome);
+    fprintf(Arquivo,"%s ",atleta.nome);
+
+    printf("Digite a idade do atleta: ");
+    scanf("%d",&atleta.idade);
+    fprintf(Arquivo,"%d ",atleta.idade);
+
+    printf("Digite a altura do atleta: ");
+    scanf("%f",&atleta.altura);
+    fprintf(Arquivo,"%f \n",atleta.altura);
+
+
+
+    fclose(Arquivo);
+
+}
+
+void BuscarAtleta()
+{
+    char buscar[20];
+    Arquivo = fopen("dados.txt","r");
+    int escolha;
+    while(1)
+    {
+
+        printf("[1] Buscar Todos\n[2] Buscar por Nome\n[3] Buscar Por ID\n");
+        scanf("%d",&escolha);
+        if(escolha==1)
+        {
+
+            rewind(Arquivo);
+            system("cls");
+            while(fscanf(Arquivo,"%d %s %d %f",&atleta.id,&atleta.nome,&atleta.idade,&atleta.altura)!=EOF)
+            {
+                printf("Nome: %s \nIdade: %d \nAltura: %.2f \nID: %d\n\n",atleta.nome,atleta.idade,atleta.altura,atleta.id);
+
+            }
+            printf("\nDeseja realizar uma nova consulta ? [1] Sim [2] Nao\n");
+            scanf("%d",&escolha);
+            if(escolha==2)
+            {
+                break;
+
+            }
+            system("cls");
+
+        }
+        else if(escolha==2)
+        {
+            system("cls");
+            printf("Digite o nome do Atleta que deseja buscar: ");
+            scanf("%s",&buscar);
+            rewind(Arquivo);
+        system("cls");
+            while(fscanf(Arquivo,"%d %s %d %f",&atleta.id,&atleta.nome,&atleta.idade,&atleta.altura)!=EOF)
+            {
+
+                if(strcmp(buscar,atleta.nome)==0)
+                {
+                    printf("Nome: %s \nIdade: %d \nAltura: %.2f \nID: %d\n\n",atleta.nome,atleta.idade,atleta.altura,atleta.id);
+                }
+
+            }
+            printf("\nDeseja realizar uma nova consulta ? [1] Sim [2] Nao\n");
+            scanf("%d",&escolha);
+            if(escolha==2)
+            {
+                break;
+
+            }
+            system("cls");
+        }
+        else if(escolha==3)
+        {
+
+            int id;
+            system("cls");
+
+            printf("Digite o ID do Atleta que deseja buscar: ");
+            scanf("%d",&id);
+            rewind(Arquivo);
+            system("cls");
+            while(fscanf(Arquivo,"%d %s %d %f",&atleta.id,&atleta.nome,&atleta.idade,&atleta.altura)!=EOF)
+            {
+
+                if(atleta.id == id)
+                {
+                    printf("Nome: %s \nIdade: %d \nAltura: %.2f \nID: %d\n\n",atleta.nome,atleta.idade,atleta.altura,atleta.id);
+                }
+
+            }
+            printf("\nDeseja realizar uma nova consulta ? [1] Sim [2] Nao\n");
+            scanf("%d",&escolha);
+            if(escolha==2)
+            {
+                break;
+
+            }
+            system("cls");
+
+        }
+
+    }
+
+    fclose(Arquivo);
+}
+
+void remover()
+{
+    int escolha;
+    while (1)
+    {
+        printf("[1] Remover Todos \n[2] Remover Por ID\n");
+        scanf("%d",&escolha);
+
+        if(escolha==1)
+        {
+
+            Arquivo = fopen("dados.txt","w");
+            MessageBox(NULL, "Atleta Excluidos","Atletas", MB_OK);
+
+
+        }
+        else if(escolha == 2)
+        {
+            system("cls");
+            int id;
+
+            printf("Digite o ID do atleta que deseja remover: ");
+            scanf("%d",&id);
+            rewind(Arquivo);
+
+            Arquivo = fopen("dados.txt","r");
+            Copia = fopen("transferindo.txt", "w");
+
+
+            while(fscanf(Arquivo,"%d %s %d %f",&atleta.id,&atleta.nome,&atleta.idade,&atleta.altura)!=EOF)
+            {
+                if(id == atleta.id)
+                {
+
+                }
+                else
+                {
+
+                    fprintf(Copia,"%d %s %d %f\n",atleta.id,atleta.nome,atleta.idade,atleta.altura);
+
+                }
+
+            }
+
+            fclose(Arquivo);
+            fclose(Copia);
+            remove("dados.txt");
+            rename("transferindo.txt","dados.txt");
+            MessageBox(NULL, "Atleta excluido com sucesso !!!","Atletas", MB_OK);
+
+            printf("\nDeseja realizar uma nova exclusao ? [1] Sim [2] Nao\n");
+            scanf("%d",&escolha);
+            if(escolha==2)
+            {
+                break;
+
+            }
+            system("cls");
+
+        }
+
+    }
+}
+
+void alterar()
+{
+
+    int id;
+    int escolha;
+    while(1)
+    {
+        printf("Digite o ID do atleta que deseja alterar: ");
+        scanf("%d",&id);
+        rewind(Arquivo);
+
+        Arquivo = fopen("dados.txt","r");
+        Copia = fopen("transferindo.txt", "w");
+
+
+        while(fscanf(Arquivo,"%d %s %d %f",&atleta.id,&atleta.nome,&atleta.idade,&atleta.altura)!=EOF)
+        {
+            if(id == atleta.id)
+            {
+
+                system("cls");
+
+                printf("=========== Dados Atuais ===========\n ID: %d\n Nome: %s\n Idade: %d\n Altura: %f\n\n=========== Novos Dados ===========\n\n",atleta.id,atleta.nome,atleta.idade,atleta.altura);
+
+                printf("Digite o nome do atleta: ");
+                scanf("%s",&atleta.nome);
+                fprintf(Arquivo,"%s ",atleta.nome);
+
+                printf("Digite a idade do atleta: ");
+                scanf("%d",&atleta.idade);
+                fprintf(Arquivo,"%d ",atleta.idade);
+
+                printf("Digite a altura do atleta: ");
+                scanf("%f",&atleta.altura);
+                fprintf(Arquivo,"%f \n",atleta.altura);
+                fprintf(Copia,"%d %s %d %f\n",atleta.id,atleta.nome,atleta.idade,atleta.altura);
+
+            }
+            else
+            {
+
+                fprintf(Copia,"%d %s %d %f\n",atleta.id,atleta.nome,atleta.idade,atleta.altura);
+
+            }
+
+        }
+
+        fclose(Arquivo);
+        fclose(Copia);
+        remove("dados.txt");
+        rename("transferindo.txt","dados.txt");
+        MessageBox(NULL, "Atleta alterado com sucesso !!!","Atletas", MB_OK);
+
+        printf("\nDeseja realizar uma nova alteracao ? [1] Sim [2] Nao\n");
+        scanf("%d",&escolha);
+        if(escolha==2)
+        {
+            break;
+
+        }
+        system("cls");
+
+    }
+}
+
+
+void menu()
+{
+    while(1)
+    {
+        system("cls");
+        int escolha;
+        printf("=========== Controle de Atletas =========== \n\n");
+        printf("[1] Cadastrar\n[2] Buscar \n[3] Remover \n[4] Alterar\n");
+        scanf("%d",&escolha);
+
+        switch (escolha)
+        {
+
+        case 1:
+            system("cls");
+            CadastarAtleta();
+            MessageBox(NULL, "Atleta Cadastrado com Sucesso !!!","Atletas", MB_OK);
+            break;
+        case 2:
+            system("cls");
+            BuscarAtleta();
+            break;
+        case 3:
+            system("cls");
+            remover();
+        case 4:
+            system("cls");
+            alterar();
+
+        }
+
+    }
+
+}
+
+int main()
+{
+
+    menu();
+
+
+    return 0;
+}
